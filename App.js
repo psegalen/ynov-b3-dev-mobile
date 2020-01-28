@@ -10,6 +10,7 @@ import Track from "./components/Track";
 import Login from "./components/Login";
 import Loading from "./components/Loading";
 import * as firebase from "firebase";
+import "@firebase/firestore";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -24,6 +25,7 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 const StackNav = createStackNavigator({
   List: {

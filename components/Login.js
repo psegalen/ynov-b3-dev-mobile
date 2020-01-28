@@ -25,7 +25,6 @@ export default class Login extends React.Component {
     if (this.state.email.length === 0 || this.state.password.length === 0) {
       Alert.alert("Fill both the inputs please");
     }
-
     if (this.state.isSignup) {
       firebase
         .auth()

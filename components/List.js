@@ -1,6 +1,8 @@
 import React from "react";
-import { FlatList, TextInput, View, Button, Alert } from "react-native";
+import { FlatList, TextInput, View, Button, Alert, Text } from "react-native";
+import * as firebase from "firebase";
 import ListItem from "./ListItem";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default class List extends React.Component {
   constructor(props) {
@@ -8,23 +10,49 @@ export default class List extends React.Component {
     this.state = {
       data: [],
       search: "",
-      isLoading: false
+      isLoading: false,
+      showLatest: false,
+      latest: ["eminem", "skrillex"]
     };
   }
 
-  searchDeezer() {
+  goButtonPressed() {
     if (this.state.search.length === 0) {
       Alert.alert("Erreur", "Le nom est vide !");
     } else {
-      this.setState({ isLoading: true });
-      fetch(`https://api.deezer.com/search?q=${this.state.search}`)
-        .then(response => response.json())
-        .then(result => {
-          console.log("Got results : ", result);
-          this.setState({ data: result.data, isLoading: false });
-        })
-        .catch(error => console.error(error));
+      this.searchDeezer(this.state.search);
     }
+  }
+
+  searchDeezer(search) {
+    if (this.input) this.input.blur();
+    this.setState({ isLoading: true });
+    fetch(`https://api.deezer.com/search?q=${search}`)
+      .then(response => response.json())
+      .then(result => {
+        this.setState({ data: result.data, isLoading: false });
+      })
+      .catch(error => console.error(error));
+
+    const userId = firebase.auth().currentUser.uid;
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(userId)
+      .get()
+      .then(doc => {
+        let data = { latest: [] };
+        if (doc.exists) data = doc.data();
+        const newData = {
+          ...data,
+          latest: [...data.latest, search]
+        };
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(userId)
+          .set(newData);
+      });
   }
 
   render() {
@@ -36,9 +64,30 @@ export default class List extends React.Component {
             placeholder="Search Deezer"
             value={this.state.search}
             onChangeText={text => this.setState({ search: text })}
+            onFocus={() => this.setState({ showLatest: true })}
+            onBlur={() => this.setState({ showLatest: false })}
+            ref={reference => {
+              this.input = reference;
+            }}
           />
-          <Button onPress={this.searchDeezer.bind(this)} title="Go !" />
+          <Button onPress={this.goButtonPressed.bind(this)} title="Go !" />
         </View>
+        {this.state.showLatest && this.state.latest.length > 0 ? (
+          <View>
+            {this.state.latest.map(s => (
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({ search: s });
+                  this.searchDeezer(s);
+                }}
+              >
+                <Text style={{ fontSize: 16, padding: 8 }}>> {s}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        ) : (
+          undefined
+        )}
         <FlatList
           data={this.state.data}
           renderItem={({ item }) => (
