@@ -29,6 +29,8 @@ export default class Login extends React.Component {
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .then(args => {
         console.log(args);
+        AsyncStorage.setItem("userId", args.user.uid);
+        this.props.navigation.navigate("TabNav");
       })
       .catch(error => Alert.alert("Error", error.message));
   }

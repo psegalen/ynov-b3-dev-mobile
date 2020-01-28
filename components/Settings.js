@@ -17,6 +17,7 @@ export default class Settings extends React.Component {
           onPress={() => {
             firebase.auth().signOut();
             AsyncStorage.removeItem("userId");
+            this.props.navigation.navigate("Login");
           }}
         >
           <Text style={styles.text}>Sign out</Text>
