@@ -7,10 +7,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import SecondScreen from "./components/SecondScreen";
 import Settings from "./components/Settings";
 import Modal from "./components/Modal";
+import List from "./components/List";
 
 const StackNav = createStackNavigator({
-  Weather: {
-    screen: Weather
+  List: {
+    screen: List
   },
   Second: {
     screen: SecondScreen
