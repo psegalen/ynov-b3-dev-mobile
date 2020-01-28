@@ -8,13 +8,14 @@ import SecondScreen from "./components/SecondScreen";
 import Settings from "./components/Settings";
 import Modal from "./components/Modal";
 import List from "./components/List";
+import Track from "./components/Track";
 
 const StackNav = createStackNavigator({
   List: {
     screen: List
   },
-  Second: {
-    screen: SecondScreen
+  Track: {
+    screen: Track
   }
 });
 

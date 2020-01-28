@@ -41,7 +41,14 @@ export default class List extends React.Component {
         </View>
         <FlatList
           data={this.state.data}
-          renderItem={({ item }) => <ListItem item={item} />}
+          renderItem={({ item }) => (
+            <ListItem
+              item={item}
+              onPress={() =>
+                this.props.navigation.navigate("Track", { track: item })
+              }
+            />
+          )}
           keyExtractor={item => item.id.toString()}
           onRefresh={this.searchDeezer.bind(this)}
           refreshing={this.state.isLoading}

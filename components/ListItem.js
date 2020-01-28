@@ -1,10 +1,10 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 
 const ListItem = props => (
-  <View>
+  <TouchableOpacity onPress={props.onPress}>
     <Text style={{ fontSize: 32 }}>{props.item.title}</Text>
-  </View>
+  </TouchableOpacity>
 );
 
 export default ListItem;
