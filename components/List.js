@@ -16,6 +16,27 @@ export default class List extends React.Component {
     };
   }
 
+  componentDidMount() {
+    setTimeout(() => {
+      const userId = firebase.auth().currentUser.uid;
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .get()
+        .then(doc => {
+          if (doc.exists) {
+            this.setState({
+              latest: doc
+                .data()
+                .latest.reverse()
+                .slice(0, 5)
+            });
+          }
+        });
+    }, 1000);
+  }
+
   goButtonPressed() {
     if (this.state.search.length === 0) {
       Alert.alert("Erreur", "Le nom est vide !");
@@ -52,6 +73,9 @@ export default class List extends React.Component {
           .collection("users")
           .doc(userId)
           .set(newData);
+        this.setState({
+          latest: newData.latest.reverse().slice(0, 5)
+        });
       });
   }
 
