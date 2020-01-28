@@ -1,14 +1,29 @@
 import * as React from "react";
-import Weather from "./components/Weather";
-import { createAppContainer } from "react-navigation";
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import SecondScreen from "./components/SecondScreen";
 import Settings from "./components/Settings";
 import Modal from "./components/Modal";
 import List from "./components/List";
 import Track from "./components/Track";
+import Login from "./components/Login";
+import Loading from "./components/Loading";
+import * as firebase from "firebase";
+
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCOIPwEh7rEvK0gcPF_jFY5NJ-KXR2S_-g",
+  authDomain: "ynovb3web.firebaseapp.com",
+  databaseURL: "https://ynovb3web.firebaseio.com",
+  projectId: "ynovb3web",
+  storageBucket: "ynovb3web.appspot.com",
+  messagingSenderId: "204878557723",
+  appId: "1:204878557723:web:97e6406780dd91124bbebe",
+  measurementId: "G-BD4TXR2SW7"
+};
+
+firebase.initializeApp(firebaseConfig);
 
 const StackNav = createStackNavigator({
   List: {
@@ -29,9 +44,9 @@ const TabNav = createBottomTabNavigator({
   Home: {
     screen: StackNav,
     navigationOptions: {
-      title: "Weather",
+      title: "Search",
       tabBarIcon: ({ tintColor }) => (
-        <MaterialCommunityIcons name="home" size={30} color={tintColor} />
+        <MaterialCommunityIcons name="magnify" size={30} color={tintColor} />
       )
     }
   },
@@ -45,10 +60,16 @@ const TabNav = createBottomTabNavigator({
   }
 });
 
+const SwitchNav = createSwitchNavigator({
+  Loading,
+  Login,
+  TabNav
+});
+
 const AppStack = createStackNavigator(
   {
     Root: {
-      screen: TabNav
+      screen: SwitchNav
     },
     Modal: {
       screen: Modal

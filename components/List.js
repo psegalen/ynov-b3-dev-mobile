@@ -30,9 +30,9 @@ export default class List extends React.Component {
   render() {
     return (
       <View>
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", padding: 16 }}>
           <TextInput
-            style={{ flex: 1 }}
+            style={{ flex: 1, borderColor: "#000", borderWidth: 1, padding: 4 }}
             placeholder="Search Deezer"
             value={this.state.search}
             onChangeText={text => this.setState({ search: text })}

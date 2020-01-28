@@ -1,11 +1,26 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  AsyncStorage
+} from "react-native";
+import * as firebase from "firebase";
 
 export default class Settings extends React.Component {
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.text}>Settings</Text>
+        <TouchableOpacity
+          onPress={() => {
+            firebase.auth().signOut();
+            AsyncStorage.removeItem("userId");
+          }}
+        >
+          <Text style={styles.text}>Sign out</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -21,6 +36,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
-    fontSize: 34
+    fontSize: 20,
+    marginBottom: 32
   }
 });
