@@ -49,6 +49,7 @@ const Chat = props => {
         });
         setMessages(messages);
         if (
+          doc.data().subscribedUsers &&
           doc
             .data()
             .subscribedUsers.indexOf(firebase.auth().currentUser.uid) !== -1
