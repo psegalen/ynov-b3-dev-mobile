@@ -11,6 +11,9 @@ import Login from "./components/Login";
 import Loading from "./components/Loading";
 import * as firebase from "firebase";
 import "@firebase/firestore";
+import { AsyncStorage } from "react-native";
+import { Notifications } from "expo";
+import * as Permissions from "expo-permissions";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -27,7 +30,63 @@ const firebaseConfig = {
 if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);
 }
-firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+firebase
+  .auth()
+  .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+  .then(() =>
+    firebase.auth().onAuthStateChanged(user => {
+      console.log("Auth changed: ", user);
+      if (firebase.auth().currentUser) {
+        firebase
+          .auth()
+          .currentUser.getIdToken()
+          .then(token => {
+            AsyncStorage.getItem("LatestPushTokenSentTo").then(value => {
+              if (value !== token) {
+                console.log("Send push token !");
+                // Send push token
+                Permissions.askAsync(Permissions.NOTIFICATIONS).then(
+                  ({ status }) => {
+                    if (status !== "granted") {
+                      alert("No notification permissions!");
+                      return;
+                    }
+                    Notifications.getExpoPushTokenAsync().then(pushToken => {
+                      return fetch(
+                        "https://europe-west1-ynovb3web.cloudfunctions.net/setToken",
+                        {
+                          method: "POST",
+                          headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
+                            FirebaseToken: token
+                          },
+                          body: JSON.stringify({
+                            token: pushToken
+                          })
+                        }
+                      )
+                        .then(response => {
+                          response.json().then(obj => console.log(obj));
+                          // Save token in AsyncStorage to avoid calling the cloud function on each startup
+                          AsyncStorage.setItem(
+                            "LatestPushTokenSentTo",
+                            pushToken
+                          );
+                        })
+                        .catch(error => {
+                          Alert.alert(error.message);
+                          console.error(error);
+                        });
+                    });
+                  }
+                );
+              }
+            });
+          });
+      }
+    })
+  );
 
 const StackNav = createStackNavigator({
   List: {

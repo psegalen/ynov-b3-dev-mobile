@@ -100,8 +100,6 @@ const Chat = props => {
     );
   }
 
-  console.log(`Keyboard height: ${keyboardHeight}`);
-
   return (
     <View style={{ flex: 1 }}>
       <FlatList

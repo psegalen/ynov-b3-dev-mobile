@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "204878557723",
+    "firebase_url": "https://ynovb3web.firebaseio.com",
+    "project_id": "ynovb3web",
+    "storage_bucket": "ynovb3web.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:204878557723:android:60f882b6f2b250374bbebe",
+        "android_client_info": {
+          "package_name": "com.ynovb3.chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "204878557723-k8ipghh3vci6o9de5bkl3n6oddlks40o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAY_esvB8Gwawfys7-szjJNaj-9GyQKvF0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "204878557723-k8ipghh3vci6o9de5bkl3n6oddlks40o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
