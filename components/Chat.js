@@ -23,6 +23,8 @@ const Chat = props => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [keyboardListener1, setKeyboadListener1] = useState(null);
   const [keyboardListener2, setKeyboadListener2] = useState(null);
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   if (firebase.auth().currentUser) {
     firebase
@@ -79,6 +81,35 @@ const Chat = props => {
     }
   };
 
+  const changeSubscription = () => {
+    setIsSubscribing(true);
+    // Change chat room subscription on the server
+    fetch(
+      "https://europe-west1-ynovb3web.cloudfunctions.net/changeRoomSubscription",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          FirebaseToken: token
+        },
+        body: JSON.stringify({
+          action: isSubscribed ? "unsubscribe" : "subscribe",
+          roomId: room.id
+        })
+      }
+    )
+      .then(response => {
+        response.json().then(obj => console.log(obj));
+        setIsSubscribed(!isSubscribed);
+        setIsSubscribing(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setIsSubscribing(false);
+      });
+  };
+
   if (room.id !== currentRoomId) {
     getMessages(room.id);
     setCurrentRoomId(room.id);
@@ -118,8 +149,19 @@ const Chat = props => {
           flexDirection: "row"
         }}
       >
+        {isSubscribing ? (
+          <ActivityIndicator color="#000" />
+        ) : (
+          <TouchableOpacity onPress={changeSubscription}>
+            <MaterialCommunityIcons
+              name={isSubscribed ? "bell-ring" : "bell-off"}
+              size={30}
+              color="#000"
+            />
+          </TouchableOpacity>
+        )}
         <TextInput
-          style={{ flex: 1, borderWidth: 1, marginRight: 16 }}
+          style={{ flex: 1, borderWidth: 1, marginHorizontal: 16 }}
           value={message}
           onChangeText={text => setMessage(text)}
         />
