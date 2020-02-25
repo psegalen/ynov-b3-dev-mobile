@@ -48,6 +48,15 @@ const Chat = props => {
           messages.push(message);
         });
         setMessages(messages);
+        if (
+          doc
+            .data()
+            .subscribedUsers.indexOf(firebase.auth().currentUser.uid) !== -1
+        ) {
+          setIsSubscribed(true);
+        } else {
+          setIsSubscribed(false);
+        }
       });
   };
 
@@ -101,7 +110,6 @@ const Chat = props => {
     )
       .then(response => {
         response.json().then(obj => console.log(obj));
-        setIsSubscribed(!isSubscribed);
         setIsSubscribing(false);
       })
       .catch(error => {
