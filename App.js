@@ -6,7 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Settings from "./components/Settings";
 import Modal from "./components/Modal";
 import List from "./components/List";
-import Track from "./components/Track";
+import Chat from "./components/Chat";
 import Login from "./components/Login";
 import Loading from "./components/Loading";
 import * as firebase from "firebase";
@@ -24,15 +24,26 @@ const firebaseConfig = {
   measurementId: "G-BD4TXR2SW7"
 };
 
-firebase.initializeApp(firebaseConfig);
+if (firebase.apps.length === 0) {
+  firebase.initializeApp(firebaseConfig);
+}
 firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 const StackNav = createStackNavigator({
   List: {
-    screen: List
+    screen: List,
+    navigationOptions: {
+      title: "Chat rooms"
+    }
   },
-  Track: {
-    screen: Track
+  Chat: {
+    screen: Chat,
+    navigationOptions: ({ navigation }) => ({
+      title: `${(navigation.state &&
+        navigation.state.params &&
+        navigation.state.params.title) ||
+        "Chat"}`
+    })
   }
 });
 
@@ -46,9 +57,9 @@ const TabNav = createBottomTabNavigator({
   Home: {
     screen: StackNav,
     navigationOptions: {
-      title: "Search",
+      title: "Chat",
       tabBarIcon: ({ tintColor }) => (
-        <MaterialCommunityIcons name="magnify" size={30} color={tintColor} />
+        <MaterialCommunityIcons name="chat" size={30} color={tintColor} />
       )
     }
   },
